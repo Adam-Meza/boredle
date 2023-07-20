@@ -1,8 +1,8 @@
 import React from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 
-const Keyboard = ({updateGuess}) => {
-  const handlePress = (letter) => {
+const Keyboard = ({updateGuess, submitGuess, backspace}) => {
+  const handleLetterKeyPress = (letter) => {
     updateGuess(letter)
   };
 
@@ -10,7 +10,7 @@ const Keyboard = ({updateGuess}) => {
     <TouchableOpacity
       key={letter}
       style={styles.button}
-      onPress={() => handlePress(letter)}
+      onPress={() => handleLetterKeyPress(letter)}
     >
       <Text style={styles.buttonText}>{letter}</Text>
     </TouchableOpacity>
@@ -20,7 +20,7 @@ const Keyboard = ({updateGuess}) => {
     <TouchableOpacity
       key={letter}
       style={styles.button}
-      onPress={() => handlePress(letter)}
+      onPress={() => handleLetterKeyPress(letter)}
     >
       <Text style={styles.buttonText}>{letter}</Text>
     </TouchableOpacity>
@@ -30,7 +30,7 @@ const Keyboard = ({updateGuess}) => {
     <TouchableOpacity
       key={letter}
       style={styles.button}
-      onPress={() => handlePress(letter)}
+      onPress={() => handleLetterKeyPress(letter)}
     >
       <Text style={styles.buttonText}>{letter}</Text>
     </TouchableOpacity>
@@ -40,7 +40,16 @@ const Keyboard = ({updateGuess}) => {
     <View style={styles.keyboardContainer}>
       <View style={styles.keyRow}>{row1}</View>
       <View style={styles.keyRow}>{row2}</View>
-      <View style={styles.keyRow}>{row3}</View>
+      <View style ={styles.keyRow}>
+        <View style={styles.keyRow}>{row3}</View>
+        <TouchableOpacity style={styles.submitButton } onPress={()=> submitGuess()}>
+          <Text>Submit</Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.backButton } onPress={()=> backspace()}>
+          <Text>Back</Text>
+        </TouchableOpacity>
+      </View>
+
     </View>
   );
 };
@@ -55,7 +64,7 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   button: {
-    marginHorizontal: 4,
+    marginHorizontal: 3,
     padding: 10,
     backgroundColor: 'lightgray',
     borderRadius: 5,
@@ -64,6 +73,24 @@ const styles = StyleSheet.create({
     fontSize: 18,
     color: "black"
   },
+  submitButton: {
+    marginHorizontal: 3,
+    padding: 6,
+    backgroundColor: 'lightgray',
+    borderRadius: 5,
+    height: 42,
+    alignItems: "center",
+    justifyContent: "center"
+  },
+  backButton: {
+    marginHorizontal: 3,
+    padding: 6,
+    backgroundColor: 'lightgray',
+    borderRadius: 5,
+    height: 42,
+    alignItems: "center",
+    justifyContent: "center"
+  }
 });
 
 export default Keyboard;

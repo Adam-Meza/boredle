@@ -30,7 +30,9 @@ export default function Page() {
       } else {
         return previousState.map(square => {
           if (square.id === currentSquare.id) {
-            return { id: square.id, value: letter, status: "active", row: currentRow }
+            square.status = "active";
+            square.value = letter;
+            return square
           }
           return square
         })
@@ -52,6 +54,28 @@ export default function Page() {
       }
     })
   }
+  
+  const submitGuess = () => {
+    console.log(currentGuess, currentLetters)
+  }
+
+  const backspace = () => {
+    setBoard(previousState => {
+      return previousState.map(square => {
+        if (square.id === currentSquare.id - 1) {
+          square.value = ""
+          square.status = "inactive"
+          return square
+        }
+        return square
+      })
+    })
+
+    setGuess(previousState => [...previousState.pop()])
+    setSquare(previousState => {
+      return {id: previousState.id - 1, value: "", status: "inactive", row: currentRow}
+    })
+}
 
   return (
     <View style={styles.app}>
@@ -63,7 +87,11 @@ export default function Page() {
         { rowFive }
         { rowSix }
       </View>
-      <Keyboard updateGuess={updateGuess}/>
+      <Keyboard 
+        updateGuess={updateGuess}
+        submitGuess={submitGuess}
+        backspace={backspace}
+      />
     </View>
   );
 }
