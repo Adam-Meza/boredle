@@ -24,20 +24,27 @@ export default function Page() {
   //Event Handlers
   const updateBoardStare = (letter) => {
     setBoard((previousState) => {
-      return previousState.map(square => {
-        if (square.id === currentSquare.id) {
-          return { id: square.id, value: letter, status: "active", row: currentRow }
-        }
-        return square
-      })
+      console.log(currentGuess)
+      if (currentSquare.id.toString().slice(-1) === '4' && currentGuess.length === 5) {
+        return previousState
+      } else {
+        return previousState.map(square => {
+          if (square.id === currentSquare.id) {
+            return { id: square.id, value: letter, status: "active", row: currentRow }
+          }
+          return square
+        })
+      }
     })
   }
 
   const updateGuess = (letter) => {
-    setGuess(previousState => [...previousState, letter])
+    setGuess(previousState => {
+      return currentGuess.length < 5 ? [...previousState, letter]: previousState;
+    });
+
     updateBoardStare(letter)
     setSquare((previousState) => {
-      console.log(previousState)
       if (previousState.id.toString().slice(-1) === '4') {
         return previousState
       } else {
