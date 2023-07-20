@@ -2,16 +2,39 @@ import { StyleSheet, Text, View } from "react-native";
 import { defaultState } from "./deafultState";
 import Row from "./Components/Row";
 import Keyboard from "./Components/Keyboard";
+import { useState, useEffect } from "react";
 
 export default function Page() {
+  // State
+  const [boardState, setBoard]= useState(defaultState),
+    [currentWord, setWord] = useState("spank"),
+    [currentLetters, setLetters] = useState(currentWord.split()),
+    [currentRow, setRow] = useState(1),
+    [currentSquare, setSquare] = useState({id: 10, value: '', status: "inactive", row: 1}),
+    [currentGuess, setGuess] = useState([])
+  
+  // Row Components
+  const rowOne = <Row squareData={boardState.filter(square => square.row === 1)}/>,
+    rowTwo = <Row squareData={boardState.filter(square => square.row === 2)}/>,
+    rowThree = <Row squareData={boardState.filter(square => square.row === 3)}/>,
+    rowFour = <Row squareData={boardState.filter(square => square.row === 4)}/>,
+    rowFive = <Row squareData={boardState.filter(square => square.row === 5)}/>,
+    rowSix =  <Row squareData={boardState.filter(square => square.row === 6)}/>;
 
-  const rowOne = <Row squareData={defaultState.filter(square => square.row === 1)}/>
-  const rowTwo = <Row squareData={defaultState.filter(square => square.row === 2)}/>
-  const rowThree = <Row squareData={defaultState.filter(square => square.row === 3)}/>
-  const rowFour = <Row squareData={defaultState.filter(square => square.row === 4)}/>
-  const rowFive = <Row squareData={defaultState.filter(square => square.row === 5)}/>
-  const rowSix =  <Row squareData={defaultState.filter(square => square.row === 6)}/>
-
+  //Event Handlers
+  const updateGuess = (letter) => {
+    setGuess(previousState => [...previousState, letter])
+    setBoard((previousState) => {
+      return previousState.map(square => {
+        if (square.id === currentSquare.id) {
+          console.log(square.id, letter)
+          return { id: square.id, value: letter, status: "active", row: currentRow }
+        }
+        return square
+      })
+    })
+    console.log(boardState) 
+  }
   return (
     <View style={styles.app}>
       <View style={styles.container}>
@@ -22,7 +45,7 @@ export default function Page() {
         { rowFive }
         { rowSix }
       </View>
-      <Keyboard/>
+      <Keyboard updateGuess={updateGuess}/>
     </View>
   );
 }

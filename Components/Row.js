@@ -9,8 +9,12 @@ const Row = ({squareData}) => {
       id={id.id}
       style={ styles.boardSquare }
       key={id.id}
-      >{id.value}</View>
-      )}
+      >
+      <Text>
+        {id.value}
+      </Text>
+    </View>
+    )}
   )
 
   return (

@@ -1,10 +1,9 @@
 import React from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 
-const Keyboard = () => {
+const Keyboard = ({updateGuess}) => {
   const handlePress = (letter) => {
-    // Handle the onPress event for each letter
-    console.log(`Pressed ${letter}`);
+    updateGuess(letter)
   };
 
   const row1 = ['q', 'w', 'e', 'r', 't', 'y', 'u', 'i', 'o', 'p'].map((letter) => (
