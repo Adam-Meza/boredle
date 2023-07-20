@@ -12,7 +12,7 @@ export default function Page() {
     [currentLetters, setLetters] = useState(currentWord.split('')),
     [currentRow, setRow] = useState(1),
     [currentSquare, setSquare] = useState({id: 10, value: '', status: "inactive", row: 1}),
-    [currentGuess, setGuess] = useState([])
+    [currentGuess, setGuess] = useState([]);
   
   // Row Components
   const rowOne = <Row squareData={boardState.filter(square => square.row === 1)}/>,
@@ -25,11 +25,11 @@ export default function Page() {
   //Atomic Functions
   const checkForWin = () => {
     return currentGuess.join("") === currentLetters.join("") ? true : false;
-  }
+  };
 
   const checkForRealWord = (guess) => {
     return words.some(word => word === guess) ? true : false
-  }
+  };
 
   //Event Handlers
   const updateGuess = (letter) => {
@@ -44,76 +44,60 @@ export default function Page() {
             return square
           }
           return square
-        })
-      })
+        });
+      });
 
       if (currentSquare.id % 10 !== 4) {
         setSquare(previousState => boardState.find(square => square.id === previousState.id + 1))
       } 
-    }
-  }
+    };
+  };
 
   const checkLetter = (state) => {
+    console.log(currentRow)
       return state.map(square => {
 
         if (square.value === currentLetters[square.id % 10] 
           && currentRow === square.row) {
-            square.status = 'correct'
-            return square
+            square.status = 'correct';
+            return square;
 
         } else if (
           square.value !== currentLetters[square.id % 10]
           && currentLetters.includes(square.value)
           && currentRow === square.row) {
-            square.status = "close"
-            return square
+            square.status = "close";
+            return square;
 
         } else if (!currentLetters.includes(square.value)
           && currentRow === square.row) {
-            square.status = "incorrect"
-            return square
+            square.status = "incorrect";
+            return square;
 
         } else {
-          return square
-        }
-      }
-      )
-    }
+          return square;
+        };
+    });
+  };
 
-  
   const submitGuess = () => {
+    console.log(currentGuess)
     if(checkForWin()) {
       setBoard(previousState => checkLetter(previousState))
-        console.log("congrats!")
+        console.log("congrats!");
 
       } else if (currentGuess.length < 5) {
-        console.log("too short")
+        console.log("too short");
 
       } else if (!checkForRealWord(currentGuess.join(""))) {
-        console.log('word was no good')
+        console.log('word was no good');
 
       } else {
-      setBoard(previousState => checkLetter(previousState))
-      setRow(previousState => {
-        if (currentRow !== 6){
-          return previousState + 1
-        } else {
-          return previousState
-        }
-      })
-
-      console.log(currentSquare, "state on 99")
-      setSquare(previousState => {
-        if (previousState.row !== 6) {
-          return previousState.row + 1
-        }
-        const newRow = previousState.row !== 6 ? previousState.row + 1 : previousState.row
-      })
-
-    }
-
-
-
+        setGuess([])
+        setBoard(previousState => checkLetter(previousState))
+        setRow(previousState => currentRow !== 6 ? previousState + 1 : previousState)
+        setSquare(boardState.find(square => square.id === (currentRow + 1) * 10))
+      }
   }
 
 
