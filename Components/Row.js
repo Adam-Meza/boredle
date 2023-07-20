@@ -1,6 +1,6 @@
-import { StyleSheet, View, Text } from 'react-native'
-import React from 'react'
-import BoardSquare from './BoardSquare'
+import { StyleSheet, View, Text } from 'react-native';
+import React from 'react';
+import BoardSquare from './BoardSquare';
 
 const Row = ({squareData}) => {
   const squares = squareData.map(square => {
@@ -13,21 +13,21 @@ const Row = ({squareData}) => {
         key={square.id}
         value = {square.value.toUpperCase()}
       />
-    )}
-  )
+    );
+  });
 
   return (
     <View style={styles.row}>
       {squares}
     </View>
-  )
-}
+  );
+};
 
-export default Row
+export default Row;
 
 const styles = StyleSheet.create({ 
   row: {
     flexDirection: "row",
     alignItems: "center",
   },
-})
+});

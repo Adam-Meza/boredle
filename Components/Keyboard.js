@@ -3,7 +3,7 @@ import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 
 const Keyboard = ({updateGuess, submitGuess, backspace}) => {
   const handleLetterKeyPress = (letter) => {
-    updateGuess(letter)
+    updateGuess(letter);
   };
 
   const row1 = ['q', 'w', 'e', 'r', 't', 'y', 'u', 'i', 'o', 'p'].map((letter) => (

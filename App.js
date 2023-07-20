@@ -8,7 +8,7 @@ import { words } from "./words";
 export default function Page() {
   // State
   const [boardState, setBoard]= useState(defaultState),
-    [currentWord, setWord] = useState("spank"),
+    [currentWord, setWord] = useState("kayak"),
     [currentLetters, setLetters] = useState(currentWord.split('')),
     [currentRow, setRow] = useState(1),
     [currentSquare, setSquare] = useState({id: 10, value: '', status: "inactive", row: 1}),
@@ -22,40 +22,7 @@ export default function Page() {
     rowFive = <Row squareData={boardState.filter(square => square.row === 5)}/>,
     rowSix =  <Row squareData={boardState.filter(square => square.row === 6)}/>;
 
-  //Event Handlers
-  const updateBoardStare = (letter) => {
-    setBoard((previousState) => {
-      console.log(currentGuess)
-      if (currentSquare.id % 10 && currentGuess.length === 5) {
-        return previousState
-      } else {
-        return previousState.map(square => {
-          if (square.id === currentSquare.id) {
-            square.status = "active";
-            square.value = letter;
-            return square
-          }
-          return square
-        })
-      }
-    })
-  }
-
-  const updateGuess = (letter) => {
-    setGuess(previousState => {
-      return currentGuess.length < 5 ? [...previousState, letter]: previousState;
-    });
-
-    updateBoardStare(letter)
-    setSquare((previousState) => {
-      if (previousState.id % 10 === 4) {
-        return previousState
-      } else {
-        return boardState.find(square => square.id === previousState.id + 1)
-      }
-    })
-  }
-
+  //Atomic Functions
   const checkForWin = () => {
     return currentGuess.join("") === currentLetters.join("") ? true : false;
   }
@@ -64,55 +31,113 @@ export default function Page() {
     return words.some(word => word === guess) ? true : false
   }
 
-  const checkLetter = (letter) => {
-    setBoard((previousState) => {
-      return previousState.map(square => {
-        if (letter === currentLetters[id % 10] && currentRow === square.row) {
-          square.status === 'correct'
+  //Event Handlers
+  const updateGuess = (letter) => {
+    console.log(currentSquare)
+    if (currentGuess.length < 5) {
+      setGuess(previousState => [...previousState, letter]);
+      setBoard(previousState => {
+        return previousState.map(square => {
+          if (square.id === currentSquare.id) {
+            square.status = "active";
+            square.value = letter;
+            return square
+          }
           return square
-        } else if (currentLetters.includes(letter) && !letter === currentLetters[id % 10]) {
-          square.status === "close"
-          return square
-        } else {
-          square.status === "incorrect"
-          return square
-        }
+        })
       })
-    })
-  }
-  
-  const submitGuess = () => {
-    if(checkForWin()) {
-      console.log("congrats!")
-    } else if (currentGuess.length < 5) {
-      console.log("too short")
-    } else if (!checkForRealWord(currentGuess.join(""))) {
-      console.log('word was no good')
-    } else {
-      setRow(previousState => previousState += 1)
-      
-      // this is where were gonan check each letter to see where it falls in the
-      // letters array 
+
+      if (currentSquare.id % 10 !== 4) {
+        setSquare(previousState => boardState.find(square => square.id === previousState.id + 1))
+      } 
     }
   }
 
-  const backspace = () => {
-    setBoard(previousState => {
-      return previousState.map(square => {
-        if (square.id === currentSquare.id - 1) {
-          square.value = ""
-          square.status = "inactive"
+  const checkLetter = (state) => {
+      return state.map(square => {
+
+        if (square.value === currentLetters[square.id % 10] 
+          && currentRow === square.row) {
+            square.status = 'correct'
+            return square
+
+        } else if (
+          square.value !== currentLetters[square.id % 10]
+          && currentLetters.includes(square.value)
+          && currentRow === square.row) {
+            square.status = "close"
+            return square
+
+        } else if (!currentLetters.includes(square.value)
+          && currentRow === square.row) {
+            square.status = "incorrect"
+            return square
+
+        } else {
           return square
         }
-        return square
-      })
-    })
+      }
+      )
+    }
 
-    setGuess(previousState => [...previousState.pop()])
-    setSquare(previousState => {
-      return {id: previousState.id - 1, value: "", status: "inactive", row: currentRow}
-    })
-}
+  
+  const submitGuess = () => {
+    if(checkForWin()) {
+      setBoard(previousState => checkLetter(previousState))
+        console.log("congrats!")
+
+      } else if (currentGuess.length < 5) {
+        console.log("too short")
+
+      } else if (!checkForRealWord(currentGuess.join(""))) {
+        console.log('word was no good')
+
+      } else {
+      setBoard(previousState => checkLetter(previousState))
+      setRow(previousState => {
+        if (currentRow !== 6){
+          return previousState + 1
+        } else {
+          return previousState
+        }
+      })
+
+      console.log(currentSquare, "state on 99")
+      setSquare(previousState => {
+        if (previousState.row !== 6) {
+          return previousState.row + 1
+        }
+        const newRow = previousState.row !== 6 ? previousState.row + 1 : previousState.row
+      })
+
+    }
+
+
+
+  }
+
+
+  const backspace = () => {
+    if (currentSquare.id % 10 !== 0) {
+      setGuess(previousState => [...previousState.slice(0, -1)])
+      const idToMatch = currentSquare.id % 10 === 4 
+                    && currentGuess.length === 5 ? 
+                    currentSquare.id : currentSquare.id - 1
+
+      setBoard(previousState => {
+        return previousState.map(square => {
+          if (square.id === idToMatch) {
+            square.value = ""
+            square.status = "inactive"
+            return square
+          }
+          return square
+        })
+      })
+
+      setSquare({id: idToMatch, value: "", status: "inactive", row: currentRow})
+    }
+  }
 
   return (
     <View style={styles.app}>
@@ -139,33 +164,7 @@ const styles = StyleSheet.create({
     height: "100%"
   },
   container: {
-    // flex: 1,
     alignItems: "center",
     padding: 0,
-  },
-  main: {
-    flex: 1,
-    justifyContent: "center",
-    maxWidth: 960,
-    marginHorizontal: "auto",
-  },
-  title: {
-    fontSize: 64,
-    fontWeight: "bold",
-  },
-  subtitle: {
-    fontSize: 36,
-    color: "#38434D",
-  },
-  boardSquare: {
-    borderWidth: 1,
-    borderColor: "fefefe",
-    height: 60,
-    width: 60,
-    margin: 6,
-  },
-  row: {
-    flexDirection: "row",
-    alignItems: "center",
   }
 });

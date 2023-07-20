@@ -7,21 +7,23 @@ const BoardSquare = ({row, id, value, status}) => {
 
   switch (status) {
     case 'active':
-      console.log('came here')
       textStyles.push(styles.activeText);
       squareStyles.push(styles.activeBox);
       break;
     case 'close':
-      textStyles.push(styles.close)
+      textStyles.push(styles.closeText)
       squareStyles.push(styles.closeBox);
       break;
     case 'correct':
+      textStyles.push(styles.correctText);
       squareStyles.push(styles.correctBox);
       break;
-    case 'wrong':
+    case 'incorrect':
+      textStyles.push(styles.incorrectText)
       squareStyles.push(styles.incorrectBox);
       break;
     default:
+      textStyles.push(styles.inactiveText);
       squareStyles.push(styles.inactiveBox);
       break;
   }
@@ -62,27 +64,34 @@ const styles = StyleSheet.create({
   activeText: {
     color: "black"
   },
-  inactiveText: {
-
-  },
   incorrectText: {
-
+    color: "white"
   },
   correctText: {
-
+    color:"white"
   },
   activeBox: {
     borderColor: "black"
     // backgroundColor: "black",
   },
   inactiveBox: {
-
+    borderColor: "grey",
   },
   incorrectBox: {
-
+    backgroundColor: "grey"
+  },
+  inactiveText: {
+    color: "white"
   },
   correctBox: {
-
+    backgroundColor: "#537308",
+    borderColor:"#537308"
   },
-  
+  closeText: {
+    color: "white"
+  },
+  closeBox: {
+    borderColor: "#f2c41d",
+    backgroundColor: "#f2c41d"
+  }
 })
