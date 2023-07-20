@@ -3,14 +3,15 @@ import React from 'react'
 import BoardSquare from './BoardSquare'
 
 const Row = ({squareData}) => {
-  const squares = squareData.map(id => {
+  const squares = squareData.map(square => {
     return (
-      <BoardSquare 
+      <BoardSquare
+        status={square.status}
         row={squareData.row}
-        id={id.id}
-        style={ styles.boardSquare }
-        key={id.id}
-        value = {id.value.toUpperCase()}
+        id={square.id}
+        style={styles.boardSquare }
+        key={square.id}
+        value = {square.value.toUpperCase()}
       />
     )}
   )
