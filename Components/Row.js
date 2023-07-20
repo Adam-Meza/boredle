@@ -10,8 +10,8 @@ const Row = ({squareData}) => {
       style={ styles.boardSquare }
       key={id.id}
       >
-      <Text>
-        {id.value}
+      <Text style={styles.squareText}>
+        {id.value.toUpperCase()}
       </Text>
     </View>
     )}
@@ -33,9 +33,14 @@ const styles = StyleSheet.create({
     height: 60,
     width: 60,
     margin: 6,
+    justifyContent:"center",
+    alignItems: "center",
   },
   row: {
     flexDirection: "row",
     alignItems: "center",
+  },
+  squareText: {
+    fontSize: 26
   }
 })

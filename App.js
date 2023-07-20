@@ -22,19 +22,30 @@ export default function Page() {
     rowSix =  <Row squareData={boardState.filter(square => square.row === 6)}/>;
 
   //Event Handlers
-  const updateGuess = (letter) => {
-    setGuess(previousState => [...previousState, letter])
+  const updateBoardStare = (letter) => {
     setBoard((previousState) => {
       return previousState.map(square => {
         if (square.id === currentSquare.id) {
-          console.log(square.id, letter)
           return { id: square.id, value: letter, status: "active", row: currentRow }
         }
         return square
       })
     })
-    console.log(boardState) 
   }
+
+  const updateGuess = (letter) => {
+    setGuess(previousState => [...previousState, letter])
+    updateBoardStare(letter)
+    setSquare((previousState) => {
+      console.log(previousState)
+      if (previousState.id.toString().slice(-1) === '4') {
+        return previousState
+      } else {
+        return boardState.find(square => square.id === previousState.id + 1)
+      }
+    })
+  }
+
   return (
     <View style={styles.app}>
       <View style={styles.container}>
