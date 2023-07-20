@@ -3,12 +3,13 @@ import { defaultState } from "./deafultState";
 import Row from "./Components/Row";
 import Keyboard from "./Components/Keyboard";
 import { useState, useEffect } from "react";
+import { words } from "./words";
 
 export default function Page() {
   // State
   const [boardState, setBoard]= useState(defaultState),
     [currentWord, setWord] = useState("spank"),
-    [currentLetters, setLetters] = useState(currentWord.split()),
+    [currentLetters, setLetters] = useState(currentWord.split('')),
     [currentRow, setRow] = useState(1),
     [currentSquare, setSquare] = useState({id: 10, value: '', status: "inactive", row: 1}),
     [currentGuess, setGuess] = useState([])
@@ -25,7 +26,7 @@ export default function Page() {
   const updateBoardStare = (letter) => {
     setBoard((previousState) => {
       console.log(currentGuess)
-      if (currentSquare.id.toString().slice(-1) === '4' && currentGuess.length === 5) {
+      if (currentSquare.id % 10 && currentGuess.length === 5) {
         return previousState
       } else {
         return previousState.map(square => {
@@ -47,16 +48,52 @@ export default function Page() {
 
     updateBoardStare(letter)
     setSquare((previousState) => {
-      if (previousState.id.toString().slice(-1) === '4') {
+      if (previousState.id % 10 === 4) {
         return previousState
       } else {
         return boardState.find(square => square.id === previousState.id + 1)
       }
     })
   }
+
+  const checkForWin = () => {
+    return currentGuess.join("") === currentLetters.join("") ? true : false;
+  }
+
+  const checkForRealWord = (guess) => {
+    return words.some(word => word === guess) ? true : false
+  }
+
+  const checkLetter = (letter) => {
+    setBoard((previousState) => {
+      return previousState.map(square => {
+        if (letter === currentLetters[id % 10] && currentRow === square.row) {
+          square.status === 'correct'
+          return square
+        } else if (currentLetters.includes(letter) && !letter === currentLetters[id % 10]) {
+          square.status === "close"
+          return square
+        } else {
+          square.status === "incorrect"
+          return square
+        }
+      })
+    })
+  }
   
   const submitGuess = () => {
-    console.log(currentGuess, currentLetters)
+    if(checkForWin()) {
+      console.log("congrats!")
+    } else if (currentGuess.length < 5) {
+      console.log("too short")
+    } else if (!checkForRealWord(currentGuess.join(""))) {
+      console.log('word was no good')
+    } else {
+      setRow(previousState => previousState += 1)
+      
+      // this is where were gonan check each letter to see where it falls in the
+      // letters array 
+    }
   }
 
   const backspace = () => {
