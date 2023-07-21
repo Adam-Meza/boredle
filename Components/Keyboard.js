@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet, SafeAreaView } from 'react-native';
 
 const Keyboard = ({updateGuess, submitGuess, backspace}) => {
   const handleLetterKeyPress = (letter) => {
@@ -39,17 +39,18 @@ const Keyboard = ({updateGuess, submitGuess, backspace}) => {
   return (
     <View style={styles.keyboardContainer}>
       <View style={styles.keyRow}>{row1}</View>
-      <View style={styles.keyRow}>{row2}</View>
-      <View style ={styles.keyRow}>
-        <View style={styles.keyRow}>{row3}</View>
-        <TouchableOpacity style={styles.submitButton } onPress={()=> submitGuess()}>
-          <Text>Submit</Text>
-        </TouchableOpacity>
+      <View style ={styles.specialRow}>
+        <View style={styles.keyRow}>{row2}</View>
         <TouchableOpacity style={styles.backButton } onPress={()=> backspace()}>
           <Text>Back</Text>
         </TouchableOpacity>
       </View>
-
+      <View style ={styles.specialRow}>
+        <View style={styles.keyRow}>{row3}</View>
+        <TouchableOpacity style={styles.submitButton } onPress={()=> submitGuess()}>
+          <Text>Submit</Text>
+        </TouchableOpacity>
+      </View>
     </View>
   );
 };
@@ -60,8 +61,13 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   keyRow: {
+    alignItems: 'flex-start',
     flexDirection: 'row',
     marginBottom: 10,
+  },
+  specialRow: {
+    flexDirection: 'row',
+    alignItems: 'flex-start',
   },
   button: {
     marginHorizontal: 3,
@@ -70,7 +76,7 @@ const styles = StyleSheet.create({
     borderRadius: 5,
   },
   buttonText: {
-    fontSize: 18,
+    fontSize: 17,
     color: "black"
   },
   submitButton: {

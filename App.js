@@ -1,26 +1,26 @@
-import { StyleSheet, Text, View } from "react-native";
+import { SafeAreaView, StyleSheet, Text, View } from "react-native";
 import { defaultState } from "./deafultState";
 import Row from "./Components/Row";
 import Keyboard from "./Components/Keyboard";
 import { useState, useEffect } from "react";
-import { words } from "./words";
+import { words, getRandomWord } from "./words";
 
 export default function Page() {
   // State
   const [boardState, setBoard]= useState(defaultState),
-    [currentWord, setWord] = useState("kayak"),
-    [currentLetters, setLetters] = useState(currentWord.split('')),
-    [currentRow, setRow] = useState(1),
-    [currentSquare, setSquare] = useState({id: 10, value: '', status: "inactive", row: 1}),
-    [currentGuess, setGuess] = useState([]);
+        [currentWord, setWord] = useState(getRandomWord()),
+        [currentLetters, setLetters] = useState(currentWord.split('')),
+        [currentRow, setRow] = useState(1),
+        [currentSquare, setSquare] = useState({id: 10, value: '', status: "inactive", row: 1}),
+        [currentGuess, setGuess] = useState([]);
   
   // Row Components
   const rowOne = <Row squareData={boardState.filter(square => square.row === 1)}/>,
-    rowTwo = <Row squareData={boardState.filter(square => square.row === 2)}/>,
-    rowThree = <Row squareData={boardState.filter(square => square.row === 3)}/>,
-    rowFour = <Row squareData={boardState.filter(square => square.row === 4)}/>,
-    rowFive = <Row squareData={boardState.filter(square => square.row === 5)}/>,
-    rowSix =  <Row squareData={boardState.filter(square => square.row === 6)}/>;
+        rowTwo = <Row squareData={boardState.filter(square => square.row === 2)}/>,
+        rowThree = <Row squareData={boardState.filter(square => square.row === 3)}/>,
+        rowFour = <Row squareData={boardState.filter(square => square.row === 4)}/>,
+        rowFive = <Row squareData={boardState.filter(square => square.row === 5)}/>,
+        rowSix =  <Row squareData={boardState.filter(square => square.row === 6)}/>;
 
   //Atomic Functions
   const checkForWin = () => {
@@ -33,7 +33,6 @@ export default function Page() {
 
   //Event Handlers
   const updateGuess = (letter) => {
-    console.log(currentSquare)
     if (currentGuess.length < 5) {
       setGuess(previousState => [...previousState, letter]);
       setBoard(previousState => {
@@ -54,7 +53,6 @@ export default function Page() {
   };
 
   const checkLetter = (state) => {
-    console.log(currentRow)
       return state.map(square => {
 
         if (square.value === currentLetters[square.id % 10] 
@@ -81,11 +79,11 @@ export default function Page() {
   };
 
   const submitGuess = () => {
-    console.log(currentGuess)
     if(checkForWin()) {
       setBoard(previousState => checkLetter(previousState))
         console.log("congrats!");
-
+          //end game squence
+          
       } else if (currentGuess.length < 5) {
         console.log("too short");
 
@@ -93,13 +91,17 @@ export default function Page() {
         console.log('word was no good');
 
       } else {
-        setGuess([])
-        setBoard(previousState => checkLetter(previousState))
-        setRow(previousState => currentRow !== 6 ? previousState + 1 : previousState)
-        setSquare(boardState.find(square => square.id === (currentRow + 1) * 10))
+        setGuess([]);
+        setBoard(previousState => checkLetter(previousState));
+        setRow(previousState => currentRow !== 6 ? previousState + 1 : previousState);
+        setSquare(boardState.find(square => square.id === (currentRow + 1) * 10));
+      
+        if (currentRow === 6) {
+          //end game squence
+        }
+      
       }
   }
-
 
   const backspace = () => {
     if (currentSquare.id % 10 !== 0) {
@@ -124,21 +126,23 @@ export default function Page() {
   }
 
   return (
-    <View style={styles.app}>
-      <View style={styles.container}>
-        { rowOne }
-        { rowTwo }
-        { rowThree }
-        { rowFour }
-        { rowFive }
-        { rowSix }
+    <SafeAreaView>
+      <View style={styles.app}>
+        <View style={styles.container}>
+          { rowOne }
+          { rowTwo }
+          { rowThree }
+          { rowFour }
+          { rowFive }
+          { rowSix }
+        </View>
+        <Keyboard 
+          updateGuess={updateGuess}
+          submitGuess={submitGuess}
+          backspace={backspace}
+        />
       </View>
-      <Keyboard 
-        updateGuess={updateGuess}
-        submitGuess={submitGuess}
-        backspace={backspace}
-      />
-    </View>
+    </SafeAreaView>
   );
 }
 
