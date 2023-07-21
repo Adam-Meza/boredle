@@ -11,7 +11,7 @@ const Row = ({squareData}) => {
         id={square.id}
         style={styles.boardSquare }
         key={square.id}
-        value = {square.value.toUpperCase()}
+        value = {square.value}
       />
     );
   });

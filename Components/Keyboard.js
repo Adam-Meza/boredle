@@ -1,54 +1,71 @@
 import React from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, SafeAreaView } from 'react-native';
 
-const Keyboard = ({updateGuess, submitGuess, backspace}) => {
+const Keyboard = ({ updateGuess, submitGuess, backspace, guessedLetters }) => {
   const handleLetterKeyPress = (letter) => {
     updateGuess(letter);
   };
 
-  const row1 = ['q', 'w', 'e', 'r', 't', 'y', 'u', 'i', 'o', 'p'].map((letter) => (
-    <TouchableOpacity
-      key={letter}
-      style={styles.button}
-      onPress={() => handleLetterKeyPress(letter)}
-    >
-      <Text style={styles.buttonText}>{letter}</Text>
-    </TouchableOpacity>
-  ));
+  const checkIfGuessed = (letter) => {
+    const guessedLetterStyle = StyleSheet.flatten([styles.button, styles.guessedLetterButton])
+    const guessedLetterFontStyle = StyleSheet.flatten([styles.buttonText, styles.guessedText])
+    const keyStyle = guessedLetters.includes(letter) ? guessedLetterStyle : styles.button
+    const fontStyle =  guessedLetters.includes(letter) ? guessedLetterFontStyle : styles.buttonText
+    return [keyStyle, fontStyle]
+  }
 
-  const row2 = ['a', 's', 'd', 'f', 'g', 'h', 'j', 'k', 'l'].map((letter) => (
+  const row1 = ['Q', 'W', 'E', 'R', 'T', 'Y', 'U', 'I', 'O', 'P'].map((letter) => {
+    const keyStyle = checkIfGuessed(letter)[0]
+    const textStyle = checkIfGuessed(letter)[1]
+    return (
     <TouchableOpacity
       key={letter}
-      style={styles.button}
+      style={keyStyle}
       onPress={() => handleLetterKeyPress(letter)}
     >
-      <Text style={styles.buttonText}>{letter}</Text>
+      <Text style={textStyle}>{letter}</Text>
     </TouchableOpacity>
-  ));
+  )});
 
-  const row3 = ['z', 'x', 'c', 'v', 'b', 'n', 'm'].map((letter) => (
+  const row2 = ['A', 'S', 'D', 'F', 'G', 'H', 'J', 'K', 'L'].map((letter) => {
+    const textStyle = checkIfGuessed(letter)[1]
+    const keyStyle = checkIfGuessed(letter)[0]
+    return (  
     <TouchableOpacity
       key={letter}
-      style={styles.button}
+      style={keyStyle}
       onPress={() => handleLetterKeyPress(letter)}
     >
-      <Text style={styles.buttonText}>{letter}</Text>
+      <Text style={textStyle}>{letter}</Text>
     </TouchableOpacity>
-  ));
+  )});
+
+  const row3 = ['Z', 'X', 'C', 'V', 'B', 'N', 'M'].map((letter) => {
+    const textStyle = checkIfGuessed(letter)[1]
+    const keyStyle = checkIfGuessed(letter)[0]
+    return (
+    <TouchableOpacity
+      key={letter}
+      style={keyStyle}
+      onPress={() => handleLetterKeyPress(letter)}
+    >
+      <Text style={textStyle}>{letter}</Text>
+    </TouchableOpacity>
+  )});
+
+  const specialButtonsStyle = StyleSheet.flatten([styles.button, styles.specialButton])
 
   return (
     <View style={styles.keyboardContainer}>
       <View style={styles.keyRow}>{row1}</View>
-      <View style ={styles.specialRow}>
         <View style={styles.keyRow}>{row2}</View>
-        <TouchableOpacity style={styles.backButton } onPress={()=> backspace()}>
-          <Text>Back</Text>
-        </TouchableOpacity>
-      </View>
-      <View style ={styles.specialRow}>
-        <View style={styles.keyRow}>{row3}</View>
-        <TouchableOpacity style={styles.submitButton } onPress={()=> submitGuess()}>
+      <View style={styles.specialRow}>
+        <TouchableOpacity style={specialButtonsStyle} onPress={() => submitGuess()}>
           <Text>Submit</Text>
+        </TouchableOpacity>
+        <View style={styles.keyRow}>{row3}</View>
+        <TouchableOpacity style={specialButtonsStyle} onPress={() => backspace()}>
+          <Text>Back</Text>
         </TouchableOpacity>
       </View>
     </View>
@@ -78,26 +95,21 @@ const styles = StyleSheet.create({
     borderRadius: 5,
   },
   buttonText: {
-    fontSize: 18,
-    color: "black"
+    fontSize: 16,
+    color: "black",
+    fontWeight: "500"
   },
-  submitButton: {
-    marginHorizontal: 3,
-    padding: 6,
-    backgroundColor: 'lightgray',
-    borderRadius: 5,
-    height: 42,
+  guessedText: {
+    color: "white"
+  },
+  specialButton: {
+    padding: 5.5,
+    height: 45.5,
     alignItems: "center",
     justifyContent: "center"
-  },
-  backButton: {
-    marginHorizontal: 3,
-    padding: 6,
-    backgroundColor: 'lightgray',
-    borderRadius: 5,
-    height: 42,
-    alignItems: "center",
-    justifyContent: "center"
+  }, 
+  guessedLetterButton: {
+    backgroundColor: "grey"
   }
 });
 

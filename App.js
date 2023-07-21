@@ -4,6 +4,8 @@ import Row from "./Components/Row";
 import Keyboard from "./Components/Keyboard";
 import { useState, useEffect } from "react";
 import { words, getRandomWord } from "./words";
+import Header from "./Components/Header";
+import _ from 'lodash';
 
 export default function Page() {
   // State
@@ -12,7 +14,8 @@ export default function Page() {
         [currentLetters, setLetters] = useState(currentWord.split('')),
         [currentRow, setRow] = useState(1),
         [currentSquare, setSquare] = useState({id: 10, value: '', status: "inactive", row: 1}),
-        [currentGuess, setGuess] = useState([]);
+        [currentGuess, setGuess] = useState([]),
+        [guessedLetters, setGuessedLetters] = useState([])
   
   // Row Components
   const rowOne = <Row squareData={boardState.filter(square => square.row === 1)}/>,
@@ -53,6 +56,7 @@ export default function Page() {
   };
 
   const checkLetter = (state) => {
+    console.log(currentLetters, currentGuess)
       return state.map(square => {
 
         if (square.value === currentLetters[square.id % 10] 
@@ -91,6 +95,7 @@ export default function Page() {
         console.log('word was no good');
 
       } else {
+        setGuessedLetters(previousState => [...previousState, ...currentGuess]);
         setGuess([]);
         setBoard(previousState => checkLetter(previousState));
         setRow(previousState => currentRow !== 6 ? previousState + 1 : previousState);
@@ -99,38 +104,75 @@ export default function Page() {
         if (currentRow === 6) {
           //end game squence
         }
-      
       }
   }
 
   const backspace = () => {
     if (currentSquare.id % 10 !== 0) {
-      setGuess(previousState => [...previousState.slice(0, -1)])
+      setGuess(previousState => [...previousState.slice(0, -1)]);
       const idToMatch = currentSquare.id % 10 === 4 
                     && currentGuess.length === 5 ? 
-                    currentSquare.id : currentSquare.id - 1
+                    currentSquare.id : currentSquare.id - 1;
 
       setBoard(previousState => {
         return previousState.map(square => {
           if (square.id === idToMatch) {
-            square.value = ""
-            square.status = "inactive"
-            return square
-          }
-          return square
+            square.value = "";
+            square.status = "inactive";
+            return square;
+          };
+          return square;
         })
-      })
+      });
+      setSquare({id: idToMatch, value: "", status: "inactive", row: currentRow});
+    };
+  };
 
-      setSquare({id: idToMatch, value: "", status: "inactive", row: currentRow})
-    }
+  const startNewGame = () => {
+    setWord(getRandomWord());
+    setLetters(currentWord.split(""));
+    setRow(1);
+    setSquare({id: 10, value: '', status: "inactive", row: 1});
+    setGuess([]);
+    setGuessedLetters([])
+    setBoard([
+      {id: 10, status: "inactive", row: 1, value: ""},
+      {id: 11, status: "inactive", row: 1, value: ""},
+      {id: 12, status: "inactive", row: 1, value: ""},
+      {id: 13, status: "inactive", row: 1, value: ""},
+      {id: 14, status: "inactive", row: 1, value: ""},
+      {id: 20, status: "inactive", row: 2, value: ""},
+      {id: 21, status: "inactive", row: 2, value: ""},
+      {id: 22, status: "inactive", row: 2, value: ""},
+      {id: 23, status: "inactive", row: 2, value: ""},
+      {id: 24, status: "inactive", row: 2, value: ""},
+      {id: 30, status: "inactive", row: 3, value: ""},
+      {id: 31, status: "inactive", row: 3, value: ""},
+      {id: 32, status: "inactive", row: 3, value: ""},
+      {id: 33, status: "inactive", row: 3, value: ""},
+      {id: 34, status: "inactive", row: 3, value: ""},
+      {id: 40, status: "inactive", row: 4, value: ""},
+      {id: 41, status: "inactive", row: 4, value: ""},
+      {id: 42, status: "inactive", row: 4, value: ""},
+      {id: 43, status: "inactive", row: 4, value: ""},
+      {id: 44, status: "inactive", row: 4, value: ""},
+      {id: 50, status: "inactive", row: 5, value: ""},
+      {id: 51, status: "inactive", row: 5, value: ""},
+      {id: 52, status: "inactive", row: 5, value: ""},
+      {id: 53, status: "inactive", row: 5, value: ""},
+      {id: 54, status: "inactive", row: 5, value: ""},
+      {id: 60, status: "inactive", row: 6, value: ""},
+      {id: 61, status: "inactive", row: 6, value: ""},
+      {id: 62, status: "inactive", row: 6, value: ""},
+      {id: 63, status: "inactive", row: 6, value: ""},
+      {id: 64, status: "inactive", row: 6, value: ""},
+    ])
   }
 
   return (
     <SafeAreaView>
       <View style={styles.app}>
-        <View style={styles.header}>
-          <Text style={styles.headerText}>Bordle</Text>
-        </View>
+        <Header startNewGame={startNewGame}/>
         <View style={styles.container}>
           { rowOne }
           { rowTwo }
@@ -139,7 +181,9 @@ export default function Page() {
           { rowFive }
           { rowSix }
         </View>
-        <Keyboard 
+        <Keyboard
+          currentWord = {currentWord}
+          guessedLetters={guessedLetters}
           updateGuess={updateGuess}
           submitGuess={submitGuess}
           backspace={backspace}
@@ -157,18 +201,5 @@ const styles = StyleSheet.create({
   container: {
     alignItems: "center",
     padding: 0,
-  },
-  header:{
-    flexDirection: "row",
-    justifyContent: "flex-start",
-    alignItems: "center",
-    width: "100%",
-    height: 50, 
-    borderBottomWidth: .5,
-    borderBottomColor: "grey"
-  },
-  headerText: {
-    fontSize: 20,
-    marginLeft: 20,
   }
 });

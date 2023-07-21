@@ -51,15 +51,16 @@ const styles = StyleSheet.create({
   boardSquare: {
     borderWidth: 1,
     borderColor: "lightgray",
-    height: 50,
-    width: 50,
-    margin: 6,
+    height: 55,
+    width: 55,
+    margin: 3.5,
     justifyContent:"center",
     alignItems: "center",
   }, 
   squareText: {
     color: "grey",
-    fontSize: 26
+    fontSize: 26,
+    fontWeight:"bold"
   },
   activeText: {
     color: "black"

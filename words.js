@@ -1,4 +1,4 @@
-export const words = [
+const unformatedWords = [
   "about",
   "above",
   "actor",
@@ -1368,6 +1368,7 @@ export const words = [
   "grove",
   "growl",
   "grown",
+  "boost",
   "grows",
   "grubs",
   "gruel",
@@ -4174,6 +4175,8 @@ export const words = [
   "zippo",
   "zippy"
 ]
+
+export const words = unformatedWords.map(word => word.toUpperCase())
 
 export const getRandomWord = () => {
   const randomIndex = Math.floor(Math.random() * words.length);
