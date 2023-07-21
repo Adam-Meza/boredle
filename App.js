@@ -83,7 +83,7 @@ export default function Page() {
       setBoard(previousState => checkLetter(previousState))
         console.log("congrats!");
           //end game squence
-          
+
       } else if (currentGuess.length < 5) {
         console.log("too short");
 
@@ -128,6 +128,9 @@ export default function Page() {
   return (
     <SafeAreaView>
       <View style={styles.app}>
+        <View style={styles.header}>
+          <Text style={styles.headerText}>Bordle</Text>
+        </View>
         <View style={styles.container}>
           { rowOne }
           { rowTwo }
@@ -148,11 +151,24 @@ export default function Page() {
 
 const styles = StyleSheet.create({
   app: {
-    justifyContent: "space-evenly",
+    justifyContent: "space-between",
     height: "100%"
   },
   container: {
     alignItems: "center",
     padding: 0,
+  },
+  header:{
+    flexDirection: "row",
+    justifyContent: "flex-start",
+    alignItems: "center",
+    width: "100%",
+    height: 50, 
+    borderBottomWidth: .5,
+    borderBottomColor: "grey"
+  },
+  headerText: {
+    fontSize: 20,
+    marginLeft: 20,
   }
 });

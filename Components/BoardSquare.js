@@ -50,9 +50,9 @@ export default BoardSquare
 const styles = StyleSheet.create({
   boardSquare: {
     borderWidth: 1,
-    borderColor: "grey",
-    height: 60,
-    width: 60,
+    borderColor: "lightgray",
+    height: 50,
+    width: 50,
     margin: 6,
     justifyContent:"center",
     alignItems: "center",
@@ -75,10 +75,10 @@ const styles = StyleSheet.create({
     // backgroundColor: "black",
   },
   inactiveBox: {
-    borderColor: "grey",
+    borderColor: "lightgray",
   },
   incorrectBox: {
-    backgroundColor: "grey"
+    backgroundColor: "lightgray"
   },
   inactiveText: {
     color: "white"

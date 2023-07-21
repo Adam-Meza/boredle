@@ -72,11 +72,13 @@ const styles = StyleSheet.create({
   button: {
     marginHorizontal: 3,
     padding: 10,
+    paddingTop: 13,
+    paddingBottom: 13,
     backgroundColor: 'lightgray',
     borderRadius: 5,
   },
   buttonText: {
-    fontSize: 17,
+    fontSize: 18,
     color: "black"
   },
   submitButton: {
