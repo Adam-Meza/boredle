@@ -2,10 +2,10 @@ import { SafeAreaView, StyleSheet, Text, View } from "react-native";
 import { defaultState } from "./deafultState";
 import Row from "./Components/Row";
 import Keyboard from "./Components/Keyboard";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { words, getRandomWord } from "./words";
 import Header from "./Components/Header";
-import _ from 'lodash';
+import ModalComponent from "./Components/ModalComponent";
 
 export default function Page() {
   // State
@@ -15,7 +15,9 @@ export default function Page() {
         [currentRow, setRow] = useState(1),
         [currentSquare, setSquare] = useState({id: 10, value: '', status: "inactive", row: 1}),
         [currentGuess, setGuess] = useState([]),
-        [guessedLetters, setGuessedLetters] = useState([])
+        [guessedLetters, setGuessedLetters] = useState([]),
+        [modalVisible, setModalVisible] = useState(false),
+        [modalMessage, setModalMessage] = useState("")
   
   // Row Components
   const rowOne = <Row squareData={boardState.filter(square => square.row === 1)}/>,
@@ -32,6 +34,16 @@ export default function Page() {
 
   const checkForRealWord = (guess) => {
     return words.some(word => word === guess) ? true : false
+  };
+
+  const openModal = () => {
+    console.log("this is working")
+    setModalVisible(true);
+  };
+
+  const closeModal = () => {
+    console.log("this is working")
+    setModalVisible(false);
   };
 
   //Event Handlers
@@ -86,8 +98,8 @@ export default function Page() {
     if(checkForWin()) {
       setBoard(previousState => checkLetter(previousState))
         console.log("congrats!");
-          //end game squence
-
+        openModal()
+        setModalMessage("congrats!!")
       } else if (currentGuess.length < 5) {
         console.log("too short");
 
@@ -187,6 +199,11 @@ export default function Page() {
           updateGuess={updateGuess}
           submitGuess={submitGuess}
           backspace={backspace}
+        />
+        <ModalComponent
+          closeModal={closeModal}
+          visibility = {modalVisible}
+          message= {modalMessage}
         />
       </View>
     </SafeAreaView>
