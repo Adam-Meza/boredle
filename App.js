@@ -12,7 +12,7 @@ export default function Page() {
   const
         // Basic Gameplay States
         [boardState, setBoard]= useState(defaultState),
-        [currentWord, setWord] = useState(getRandomWord()),
+        [currentWord, setWord] = useState("LOOKS"),
         [currentLetters, setLetters] = useState(currentWord.split('')),
         [currentRow, setRow] = useState(1),
         [currentSquare, setSquare] = useState({id: 10, value: '', status: "inactive", row: 1}),
@@ -210,15 +210,13 @@ export default function Page() {
   const accountForDoubles = (squares) => {
     return squares.map(square => {
       if (square.status === "close"
-          && squares.find(activeSquare => activeSquare.status === "active"
+          && squares.find(activeSquare => activeSquare.status === "correct"
             && activeSquare.value === square.value)
-          && currentLetters.filter(letter => letter === square.value).length() < 100
+          && currentLetters.filter(letter => letter === square.value).length < 2
       ) {
-        console.log('here we are')
         square.status = 'incorrect'
         return square
       } else {
-        
         return square
       }
     })
