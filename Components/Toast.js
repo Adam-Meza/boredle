@@ -1,20 +1,20 @@
 import { useEffect } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 
-const Toast = ({ message, visible, hideToast }) => {
+const Toast = ({ message, visibility, setToastVisibility }) => {
   useEffect(() => {
-    if (visible) {
+    if (visibility) {
       const timer = setTimeout(() => {
-        hideToast();
-      }, 3000);
+        setToastVisibility(false);
+      }, 2000);
 
       return () => clearTimeout(timer);
-    }
-  }, [visible]);
+    };
+  }, [visibility]);
 
-  if (!visible) {
+  if (!visibility) {
     return null;
-  }
+  };
 
   return (
     <View style={styles.container}>
@@ -25,12 +25,17 @@ const Toast = ({ message, visible, hideToast }) => {
 
 const styles = StyleSheet.create({
   container: {
+    zIndex: 1,
     position: 'absolute',
-    top: 0,
-    left: 0,
+    top: 70,
+    left: 100,
     right: 0,
     backgroundColor: 'black',
     padding: 10,
+    width: "50%",
+    alignSelf: "center",
+    justifyContent: 'center',
+    alignItems:'center',
   },
   message: {
     color: 'white',

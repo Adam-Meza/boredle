@@ -1,17 +1,28 @@
 import React from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, SafeAreaView } from 'react-native';
 
-const Keyboard = ({ updateGuess, submitGuess, backspace, guessedLetters }) => {
+const Keyboard = ({disableKeyboard, updateGuess, submitGuess, backspace, guessedLetters, closeLetters, correctLetters }) => {
   const handleLetterKeyPress = (letter) => {
-    updateGuess(letter);
+    if (!disableKeyboard){
+      updateGuess(letter);
+    }
   };
 
   const checkIfGuessed = (letter) => {
-    const guessedLetterStyle = StyleSheet.flatten([styles.button, styles.guessedLetterButton]);
-    const guessedLetterFontStyle = StyleSheet.flatten([styles.buttonText, styles.guessedText]);
-    const keyStyle = guessedLetters.includes(letter) ? guessedLetterStyle : styles.button;
-    const fontStyle =  guessedLetters.includes(letter) ? guessedLetterFontStyle : styles.buttonText;
-    return [keyStyle, fontStyle];
+    if (correctLetters.includes(letter)) {
+      return [StyleSheet.flatten([styles.button, styles.correctLetterButton]),
+              StyleSheet.flatten([styles.buttonText, styles.guessedText]) ];
+              
+    } else if (closeLetters.includes(letter)) {
+      return [StyleSheet.flatten([styles.button, styles.closeLetterButton]),
+              StyleSheet.flatten([styles.buttonText, styles.guessedText]) ];
+      
+    } else if (guessedLetters.includes(letter)) {
+      return [StyleSheet.flatten([styles.button, styles.guessedLetterButton]),
+              StyleSheet.flatten([styles.buttonText, styles.guessedText])];
+    } else {
+      return [styles.button, styles.buttonText]
+    }
   };
 
   const row1 = ['Q', 'W', 'E', 'R', 'T', 'Y', 'U', 'I', 'O', 'P'].map((letter) => {
@@ -113,6 +124,14 @@ const styles = StyleSheet.create({
   }, 
   guessedLetterButton: {
     backgroundColor: "grey"
+  }, 
+  closeLetterButton: {
+    borderColor: "#f2c41d",
+    backgroundColor: "#f2c41d"
+  },
+  correctLetterButton: {
+    backgroundColor: "#537308",
+    borderColor:"#537308"
   }
 });
 

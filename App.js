@@ -2,38 +2,41 @@ import { SafeAreaView, StyleSheet, Text, View } from "react-native";
 import { defaultState } from "./deafultState";
 import Row from "./Components/Row";
 import Keyboard from "./Components/Keyboard";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { words, getRandomWord } from "./words";
 import Header from "./Components/Header";
 import ModalComponent from "./Components/ModalComponent";
+import Toast from "./Components/Toast";
 
 export default function Page() {
-  // State
-  const [boardState, setBoard]= useState(defaultState),
+  const
+        // Basic Gameplay States
+        [boardState, setBoard]= useState(defaultState),
         [currentWord, setWord] = useState(getRandomWord()),
         [currentLetters, setLetters] = useState(currentWord.split('')),
         [currentRow, setRow] = useState(1),
         [currentSquare, setSquare] = useState({id: 10, value: '', status: "inactive", row: 1}),
         [currentGuess, setGuess] = useState([]),
-        [guessedLetters, setGuessedLetters] = useState([]),
-        [modalVisible, setModalVisible] = useState(false),
-        [modalMessage, setModalMessage] = useState("")
-  
-  // Row Components
-  const rowOne = <Row squareData={boardState.filter(square => square.row === 1)}/>,
-        rowTwo = <Row squareData={boardState.filter(square => square.row === 2)}/>,
-        rowThree = <Row squareData={boardState.filter(square => square.row === 3)}/>,
-        rowFour = <Row squareData={boardState.filter(square => square.row === 4)}/>,
-        rowFive = <Row squareData={boardState.filter(square => square.row === 5)}/>,
-        rowSix =  <Row squareData={boardState.filter(square => square.row === 6)}/>;
 
+        //Keyboard States
+        [guessedLetters, setGuessedLetters] = useState([]),
+        [correctLetters, setCorrectLetters] = useState([]),
+        [closeLetters, setCloseLetters] = useState([]),
+
+        //Display States
+        [modalVisible, setModalVisible] = useState(false),
+        [modalMessage, setModalMessage] = useState(""),
+        [toastVisibility, setToastVisibility] = useState(false),
+        [toastMessage, setToastMessage] = useState(""),
+        [disableKeyboard, setKeyboardDisable] = useState(false);
+  
   //Atomic Functions
   const checkForWin = () => {
     return currentGuess.join("") === currentLetters.join("") ? true : false;
   };
 
   const checkForRealWord = (guess) => {
-    return words.some(word => word === guess) ? true : false
+    return words.some(word => word === guess) ? true : false;
   };
 
   const openModal = () => {
@@ -45,12 +48,15 @@ export default function Page() {
   };
 
   const startNewGame = () => {
-    setWord(getRandomWord());
-    setLetters(currentWord.split(""));
+    const newWord = getRandomWord();
+    setWord(newWord);
+    setLetters(newWord.split(""));
     setRow(1);
     setSquare({id: 10, value: '', status: "inactive", row: 1});
     setGuess([]);
-    setGuessedLetters([])
+    setGuessedLetters([]);
+    setCloseLetters([]);
+    setCorrectLetters([])
     setBoard([
       {id: 10, status: "inactive", row: 1, value: ""},
       {id: 11, status: "inactive", row: 1, value: ""},
@@ -82,28 +88,30 @@ export default function Page() {
       {id: 62, status: "inactive", row: 6, value: ""},
       {id: 63, status: "inactive", row: 6, value: ""},
       {id: 64, status: "inactive", row: 6, value: ""},
-    ])
-  }
+    ]);
+  };
   
   //Event Handlers
   const updateGuess = (letter) => {
-    if (currentGuess.length < 5) {
-      setGuess(previousState => [...previousState, letter]);
-      setBoard(previousState => {
-        return previousState.map(square => {
-          if (square.id === currentSquare.id) {
-            square.status = "active";
-            square.value = letter;
+    if(!disableKeyboard) {
+      if (currentGuess.length < 5) {
+        setGuess(previousState => [...previousState, letter]);
+        setBoard(previousState => {
+          return previousState.map(square => {
+            if (square.id === currentSquare.id) {
+              square.status = "active";
+              square.value = letter;
+              return square
+            }
             return square
-          }
-          return square
+          });
         });
-      });
-
-      if (currentSquare.id % 10 !== 4) {
-        setSquare(previousState => boardState.find(square => square.id === previousState.id + 1))
-      } 
-    };
+  
+        if (currentSquare.id % 10 !== 4) {
+          setSquare(previousState => boardState.find(square => square.id === previousState.id + 1))
+        } 
+      };
+    }
   };
 
   const checkLetter = (state) => {
@@ -112,6 +120,7 @@ export default function Page() {
 
         if (square.value === currentLetters[square.id % 10] 
           && currentRow === square.row) {
+            setCorrectLetters(previousState => [...previousState, square.value])
             square.status = 'correct';
             return square;
 
@@ -119,6 +128,7 @@ export default function Page() {
           square.value !== currentLetters[square.id % 10]
           && currentLetters.includes(square.value)
           && currentRow === square.row) {
+            setCloseLetters(previousState => [...previousState, square.value])
             square.status = "close";
             return square;
 
@@ -134,18 +144,27 @@ export default function Page() {
   };
 
   const submitGuess = () => {
-    if(checkForWin()) {
-      setBoard(previousState => checkLetter(previousState))
-        openModal()
-        setModalMessage(`You Win! Good job!`)
-        startNewGame()
+    if (!disableKeyboard) {
+      if(checkForWin()) {
+        setBoard(previousState => checkLetter(previousState))
+
+        const timer = setTimeout(() => {
+          openModal()
+          setModalMessage([`Congradulations`, `You Win!`, `🫡`])
+        }, 2000);
+
+        return () => clearTimeout(timer);
+  
       } else if (currentGuess.length < 5) {
-        console.log("too short");
+        setToastVisibility(true)
+        setToastMessage("Guess was too short")
 
       } else if (!checkForRealWord(currentGuess.join(""))) {
-        console.log('word was no good');
+        setToastVisibility(true);
+        setToastMessage("Not a valid word");
 
       } else {
+        console.log(currentWord)
         setGuessedLetters(previousState => [...previousState, ...currentGuess]);
         setGuess([]);
         setBoard(previousState => checkLetter(previousState));
@@ -153,10 +172,19 @@ export default function Page() {
         setSquare(boardState.find(square => square.id === (currentRow + 1) * 10));
       
         if (currentRow === 6) {
-          //end game squence
-        }
-      }
-  }
+          setKeyboardDisable(true)
+
+          const timer = setTimeout(() => {
+            console.log("we make it here")
+            openModal();
+            setModalMessage([`So close! The word was:`,  `${currentWord}`, '😔']);
+          }, 2000);
+
+          return () => clearTimeout(timer);
+        };
+      };
+    };
+  };
 
   const backspace = () => {
     if (currentSquare.id % 10 !== 0) {
@@ -179,29 +207,60 @@ export default function Page() {
     };
   };
 
+  const accountForDoubles = (squares) => {
+    return squares.map(square => {
+      if (square.status === "close"
+          && squares.find(activeSquare => activeSquare.status === "active"
+            && activeSquare.value === square.value)
+          && currentLetters.filter(letter => letter === square.value).length() < 100
+      ) {
+        console.log('here we are')
+        square.status = 'incorrect'
+        return square
+      } else {
+        
+        return square
+      }
+    })
+  }
+
+    // Row Components
+    const boardRows = [1, 2 , 3, 4, 5, 6].map(number => {
+      return <Row
+                  squareData={boardState.filter(square => square.row === number)}
+                  accountForDoubles={accountForDoubles}
+              />
+    })
+  
+
   return (
     <SafeAreaView>
       <View style={styles.app}>
+        <Toast 
+          message={toastMessage}
+          visibility={toastVisibility}
+          setToastVisibility={setToastVisibility}
+        />
         <Header startNewGame={startNewGame}/>
         <View style={styles.container}>
-          { rowOne }
-          { rowTwo }
-          { rowThree }
-          { rowFour }
-          { rowFive }
-          { rowSix }
+          {boardRows}
         </View>
         <Keyboard
-          currentWord = {currentWord}
+          currentWord={currentWord}
           guessedLetters={guessedLetters}
           updateGuess={updateGuess}
           submitGuess={submitGuess}
           backspace={backspace}
+          disableKeyboard={disableKeyboard}
+          correctLetters={correctLetters}
+          closeLetters={closeLetters}
         />
         <ModalComponent
+          setKeyboardDisable={setKeyboardDisable}
+          startNewGame={startNewGame}
           closeModal={closeModal}
-          visibility = {modalVisible}
-          message= {modalMessage}
+          visibility={modalVisible}
+          message={modalMessage}
         />
       </View>
     </SafeAreaView>

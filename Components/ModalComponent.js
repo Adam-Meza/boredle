@@ -1,15 +1,21 @@
 import { View, Text, Modal, StyleSheet, TouchableOpacity } from 'react-native'
 import React from 'react'
 
-const ModalComponent = ({visibility, message, closeModal}) => {
+const ModalComponent = ({setKeyboardDisable, visibility, message, closeModal, startNewGame, win}) => {
   const handlePress = () => {
-    closeModal()
-  }
+    closeModal();
+    setKeyboardDisable(false)
+    startNewGame();
+  };
   
   return (
-    <Modal visible ={visibility} animationType='slide' style={styles.modalContainer}>
-      <View style={styles.contentBox}>
-        <Text style ={styles.modalText}>{message}</Text>
+    <Modal visible ={visibility} animationType='slide'>
+      <View style={styles.contentContainer}>
+        <View style={styles.textContainer}>
+          <Text style ={styles.text}>{message[0]}</Text>
+          <Text style ={styles.text}>{message[1]}</Text>
+          <Text style ={styles.emoji}>{message[2]}</Text>
+        </View>
         <TouchableOpacity onPress={() => handlePress()}>
             <Text style={styles.modalButton}>
               Let's Play Again
@@ -17,29 +23,36 @@ const ModalComponent = ({visibility, message, closeModal}) => {
         </TouchableOpacity>
       </View>
     </Modal>
-  )
-}
+  );
+};
 
-export default ModalComponent
+export default ModalComponent;
 
 const styles = StyleSheet.create({ 
-  contentBox: {
-    marginTop: "30%",
-    height: "66%",
-    width: "66%",
-    backgroundColor: "white",
-    borderColor: "red",
-    borderWidth: .5,
+  contentContainer: {
+    marginTop: "20%",
+    height: "80%",
+    width: "80%",
     alignItems: "center",
     justifyContent: "space-evenly",
     alignSelf: "center",
+    padding: 60,
+  },
+  textContainer:{
+    alignItems: 'center',
   },
   modalButton: {
     backgroundColor: "lightgrey",
-    padding: 10,
+    padding: 15,
     border: "none",
   },
-  modalText: {
+  text: {
     fontSize: 18,
+    margin: 0,
+    width: "100%"
+  },
+  emoji: {
+    marginTop: 50,
+    fontSize: 48,
   }
-})
+});

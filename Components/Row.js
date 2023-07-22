@@ -2,8 +2,10 @@ import { StyleSheet, View, Text } from 'react-native';
 import React from 'react';
 import BoardSquare from './BoardSquare';
 
-const Row = ({squareData}) => {
-  const squares = squareData.map(square => {
+const Row = ({squareData, accountForDoubles}) => {
+  let cleanedSquareData = accountForDoubles(squareData)
+
+  let squares = cleanedSquareData.map(square => {
     return (
       <BoardSquare
         status={square.status}
@@ -15,6 +17,8 @@ const Row = ({squareData}) => {
       />
     );
   });
+
+
 
   return (
     <View style={styles.row}>
