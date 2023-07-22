@@ -17,6 +17,7 @@ export default function Page() {
         [currentRow, setRow] = useState(1),
         [currentSquare, setSquare] = useState({id: 10, value: '', status: "inactive", row: 1}),
         [currentGuess, setGuess] = useState([]),
+        [guessedWords, setGuessedWords] = useState([]),
 
         //Keyboard States
         [guessedLetters, setGuessedLetters] = useState([]),
@@ -101,26 +102,26 @@ export default function Page() {
             if (square.id === currentSquare.id) {
               square.status = "active";
               square.value = letter;
-              return square
-            }
-            return square
+              return square;
+            };
+            return square;
           });
         });
   
         if (currentSquare.id % 10 !== 4) {
-          setSquare(previousState => boardState.find(square => square.id === previousState.id + 1))
+          setSquare(previousState => boardState.find(square => square.id === previousState.id + 1));
         } 
       };
-    }
+    };
   };
 
   const checkLetter = (state) => {
-    console.log(currentLetters, currentGuess)
+    console.log(currentLetters, currentGuess);
       return state.map(square => {
 
         if (square.value === currentLetters[square.id % 10] 
           && currentRow === square.row) {
-            setCorrectLetters(previousState => [...previousState, square.value])
+            setCorrectLetters(previousState => [...previousState, square.value]);
             square.status = 'correct';
             return square;
 
@@ -128,7 +129,7 @@ export default function Page() {
           square.value !== currentLetters[square.id % 10]
           && currentLetters.includes(square.value)
           && currentRow === square.row) {
-            setCloseLetters(previousState => [...previousState, square.value])
+            setCloseLetters(previousState => [...previousState, square.value]);
             square.status = "close";
             return square;
 
@@ -163,9 +164,14 @@ export default function Page() {
         setToastVisibility(true);
         setToastMessage("Not a valid word");
 
+      } else if (guessedWords.includes(currentGuess.join(""))) {
+        setToastVisibility(true);
+        setToastMessage("You already guessed that");
+
       } else {
-        console.log(currentWord)
+        console.log(guessedWords)
         setGuessedLetters(previousState => [...previousState, ...currentGuess]);
+        setGuessedWords(previousState => [...previousState, currentGuess.join("")])
         setGuess([]);
         setBoard(previousState => checkLetter(previousState));
         setRow(previousState => currentRow !== 6 ? previousState + 1 : previousState);
@@ -175,7 +181,6 @@ export default function Page() {
           setKeyboardDisable(true)
 
           const timer = setTimeout(() => {
-            console.log("we make it here")
             openModal();
             setModalMessage([`So close! The word was:`,  `${currentWord}`, '😔']);
           }, 2000);
@@ -214,21 +219,21 @@ export default function Page() {
             && activeSquare.value === square.value)
           && currentLetters.filter(letter => letter === square.value).length < 2
       ) {
-        square.status = 'incorrect'
-        return square
+        square.status = 'incorrect';
+        return square;
       } else {
-        return square
-      }
-    })
-  }
+        return square;
+      };
+    });
+  };
 
     // Row Components
     const boardRows = [1, 2 , 3, 4, 5, 6].map(number => {
       return <Row
                   squareData={boardState.filter(square => square.row === number)}
                   accountForDoubles={accountForDoubles}
-              />
-    })
+              />;
+    });
   
 
   return (
@@ -263,7 +268,7 @@ export default function Page() {
       </View>
     </SafeAreaView>
   );
-}
+};
 
 const styles = StyleSheet.create({
   app: {
