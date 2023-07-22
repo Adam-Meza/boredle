@@ -3,7 +3,7 @@ import React from 'react'
 
 const BoardSquare = ({row, id, value, status}) => {
   let squareStyles = [styles.boardSquare];
-  let textStyles = [styles.squareText]
+  let textStyles = [styles.squareText];
 
   switch (status) {
     case 'active':
@@ -26,10 +26,10 @@ const BoardSquare = ({row, id, value, status}) => {
       textStyles.push(styles.inactiveText);
       squareStyles.push(styles.inactiveBox);
       break;
-  }
+  };
 
   const flattenedBoxStyles = StyleSheet.flatten(squareStyles);
-  const flattenedTextStyles = StyleSheet.flatten(textStyles)
+  const flattenedTextStyles = StyleSheet.flatten(textStyles);
 
   return (
     <View 
@@ -42,8 +42,8 @@ const BoardSquare = ({row, id, value, status}) => {
         {value.toUpperCase()}
       </Text>
     </View>
-  )
-}
+  );
+};
 
 export default BoardSquare
 
@@ -95,4 +95,4 @@ const styles = StyleSheet.create({
     borderColor: "#f2c41d",
     backgroundColor: "#f2c41d"
   }
-})
+});

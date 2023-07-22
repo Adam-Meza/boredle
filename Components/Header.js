@@ -1,10 +1,10 @@
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native'
 import React from 'react'
 
-export const Header = ({startNewGame}) => {
+const Header = ({startNewGame}) => {
   const handlePress = () => {
-    startNewGame()
-  }
+    startNewGame();
+  };
   
   return (
     <View style={styles.header}>
@@ -15,10 +15,10 @@ export const Header = ({startNewGame}) => {
         </Text>
       </TouchableOpacity>
     </View>
-  )
-}
+  );
+};
 
-export default Header
+export default Header;
 
 const styles = StyleSheet.create({
   header:{

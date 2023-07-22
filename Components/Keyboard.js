@@ -7,51 +7,54 @@ const Keyboard = ({ updateGuess, submitGuess, backspace, guessedLetters }) => {
   };
 
   const checkIfGuessed = (letter) => {
-    const guessedLetterStyle = StyleSheet.flatten([styles.button, styles.guessedLetterButton])
-    const guessedLetterFontStyle = StyleSheet.flatten([styles.buttonText, styles.guessedText])
-    const keyStyle = guessedLetters.includes(letter) ? guessedLetterStyle : styles.button
-    const fontStyle =  guessedLetters.includes(letter) ? guessedLetterFontStyle : styles.buttonText
-    return [keyStyle, fontStyle]
-  }
+    const guessedLetterStyle = StyleSheet.flatten([styles.button, styles.guessedLetterButton]);
+    const guessedLetterFontStyle = StyleSheet.flatten([styles.buttonText, styles.guessedText]);
+    const keyStyle = guessedLetters.includes(letter) ? guessedLetterStyle : styles.button;
+    const fontStyle =  guessedLetters.includes(letter) ? guessedLetterFontStyle : styles.buttonText;
+    return [keyStyle, fontStyle];
+  };
 
   const row1 = ['Q', 'W', 'E', 'R', 'T', 'Y', 'U', 'I', 'O', 'P'].map((letter) => {
-    const keyStyle = checkIfGuessed(letter)[0]
-    const textStyle = checkIfGuessed(letter)[1]
+    const keyStyle = checkIfGuessed(letter)[0];
+    const textStyle = checkIfGuessed(letter)[1];
     return (
-    <TouchableOpacity
-      key={letter}
-      style={keyStyle}
-      onPress={() => handleLetterKeyPress(letter)}
-    >
-      <Text style={textStyle}>{letter}</Text>
-    </TouchableOpacity>
-  )});
+      <TouchableOpacity
+        key={letter}
+        style={keyStyle}
+        onPress={() => handleLetterKeyPress(letter)}
+      >
+        <Text style={textStyle}>{letter}</Text>
+      </TouchableOpacity>
+    )
+  });
 
   const row2 = ['A', 'S', 'D', 'F', 'G', 'H', 'J', 'K', 'L'].map((letter) => {
-    const textStyle = checkIfGuessed(letter)[1]
-    const keyStyle = checkIfGuessed(letter)[0]
+    const textStyle = checkIfGuessed(letter)[1];
+    const keyStyle = checkIfGuessed(letter)[0];
     return (  
-    <TouchableOpacity
-      key={letter}
-      style={keyStyle}
-      onPress={() => handleLetterKeyPress(letter)}
-    >
-      <Text style={textStyle}>{letter}</Text>
-    </TouchableOpacity>
-  )});
+      <TouchableOpacity
+        key={letter}
+        style={keyStyle}
+        onPress={() => handleLetterKeyPress(letter)}
+      >
+        <Text style={textStyle}>{letter}</Text>
+      </TouchableOpacity>
+    )
+  });
 
   const row3 = ['Z', 'X', 'C', 'V', 'B', 'N', 'M'].map((letter) => {
     const textStyle = checkIfGuessed(letter)[1]
     const keyStyle = checkIfGuessed(letter)[0]
     return (
-    <TouchableOpacity
-      key={letter}
-      style={keyStyle}
-      onPress={() => handleLetterKeyPress(letter)}
-    >
-      <Text style={textStyle}>{letter}</Text>
-    </TouchableOpacity>
-  )});
+      <TouchableOpacity
+        key={letter}
+        style={keyStyle}
+        onPress={() => handleLetterKeyPress(letter)}
+      >
+        <Text style={textStyle}>{letter}</Text>
+      </TouchableOpacity>
+    )
+  });
 
   const specialButtonsStyle = StyleSheet.flatten([styles.button, styles.specialButton])
 

@@ -7,15 +7,14 @@ const ModalComponent = ({visibility, message, closeModal}) => {
   }
   
   return (
-    <Modal visible ={visibility} animationType='slide'>
-      <View style={styles.modalContainer}>
-        <TouchableOpacity onPress={() => handlePress()}>
-          <Text >
-            X
-          </Text>
-        </TouchableOpacity>
-        
+    <Modal visible ={visibility} animationType='slide' style={styles.modalContainer}>
+      <View style={styles.contentBox}>
         <Text style ={styles.modalText}>{message}</Text>
+        <TouchableOpacity onPress={() => handlePress()}>
+            <Text style={styles.modalButton}>
+              Let's Play Again
+            </Text>
+        </TouchableOpacity>
       </View>
     </Modal>
   )
@@ -23,24 +22,24 @@ const ModalComponent = ({visibility, message, closeModal}) => {
 
 export default ModalComponent
 
-const styles = StyleSheet.create({
-  modalWrap: {
-    height: "100%",
-    width: "100%",
-    alignItems: "center",
-    justifyContent: "center",
-    alignSelf: "center"
-  },  
-  modalContainer: {
-    height: 100,
-    width: 100,
+const styles = StyleSheet.create({ 
+  contentBox: {
+    marginTop: "30%",
+    height: "66%",
+    width: "66%",
     backgroundColor: "white",
     borderColor: "red",
     borderWidth: .5,
     alignItems: "center",
-    justifyContent: "center"
+    justifyContent: "space-evenly",
+    alignSelf: "center",
+  },
+  modalButton: {
+    backgroundColor: "lightgrey",
+    padding: 10,
+    border: "none",
   },
   modalText: {
-
+    fontSize: 18,
   }
 })
