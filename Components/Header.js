@@ -1,5 +1,5 @@
-import { View, Text, StyleSheet, TouchableOpacity } from 'react-native'
-import React from 'react'
+import { View, Text, StyleSheet, Dimensions, TouchableOpacity } from 'react-native'
+const windowWidth = Dimensions.get('window').width;
 
 const Header = ({startNewGame}) => {
   const handlePress = () => {
@@ -24,21 +24,23 @@ const styles = StyleSheet.create({
   header:{
     flexDirection: "row",
     justifyContent: "space-between",
-    alignItems: "center",
+    alignItems: "flex-end",
     width: "100%",
     height: 50, 
-    borderBottomWidth: .5,
-    borderBottomColor: "grey"
+    borderBottomWidth: .7,
+    borderBottomColor: "#f2c41d",
+    paddingBottom: 6,
   },
   headerText: {
     fontSize: 22,
-    marginLeft: 20,
+    marginLeft: windowWidth < 500 ? 20 : 40, 
   },
   button: {
-    marginRight: 20,
+    marginRight: windowWidth < 500 ? 20 : 40, 
     fontSize: 14,
     borderWidth: .5,
     padding: 6,
-    borderColor: "grey"
+    borderColor: "#4b7774",
+    marginBottom: 3,
   }
 });

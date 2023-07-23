@@ -1,5 +1,7 @@
-import { View, Text, StyleSheet } from 'react-native'
+import { View, Text, StyleSheet, Dimensions } from 'react-native'
 import React from 'react'
+
+const windowWidth = Dimensions.get('window').width;
 
 const BoardSquare = ({row, id, value, status}) => {
   let squareStyles = [styles.boardSquare];
@@ -39,7 +41,7 @@ const BoardSquare = ({row, id, value, status}) => {
       key={id}
       >
       <Text style={flattenedTextStyles}>
-        {value.toUpperCase()}
+        {value}
       </Text>
     </View>
   );
@@ -51,8 +53,8 @@ const styles = StyleSheet.create({
   boardSquare: {
     borderWidth: 1,
     borderColor: "lightgray",
-    height: 55,
-    width: 55,
+    height: windowWidth < 500 ? 55 : 70,
+    width: windowWidth < 500 ? 55 : 70,
     margin: 3.5,
     justifyContent:"center",
     alignItems: "center",
@@ -85,8 +87,8 @@ const styles = StyleSheet.create({
     color: "white"
   },
   correctBox: {
-    backgroundColor: "#537308",
-    borderColor:"#537308"
+    backgroundColor: "#4b7774",
+    borderColor:"#4b7774"
   },
   closeText: {
     color: "white"

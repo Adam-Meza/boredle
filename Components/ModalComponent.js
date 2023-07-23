@@ -42,9 +42,10 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   modalButton: {
-    backgroundColor: "lightgrey",
+    fontWeight: 500,
+    color:'white',
+    backgroundColor: "#4b7774",
     padding: 15,
-    border: "none",
   },
   text: {
     fontSize: 18,

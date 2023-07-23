@@ -18,8 +18,6 @@ const Row = ({squareData, accountForDoubles}) => {
     );
   });
 
-
-
   return (
     <View style={styles.row}>
       {squares}

@@ -1,18 +1,20 @@
-import { SafeAreaView, StyleSheet, Text, View } from "react-native";
+import { SafeAreaView, StyleSheet, Dimensions, View } from "react-native";
 import { defaultState } from "./deafultState";
 import Row from "./Components/Row";
 import Keyboard from "./Components/Keyboard";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { words, getRandomWord } from "./words";
 import Header from "./Components/Header";
 import ModalComponent from "./Components/ModalComponent";
 import Toast from "./Components/Toast";
 
+const windowWidth = Dimensions.get('window').width;
+
 export default function Page() {
   const
         // Basic Gameplay States
         [boardState, setBoard]= useState(defaultState),
-        [currentWord, setWord] = useState("LOOKS"),
+        [currentWord, setWord] = useState(getRandomWord()),
         [currentLetters, setLetters] = useState(currentWord.split('')),
         [currentRow, setRow] = useState(1),
         [currentSquare, setSquare] = useState({id: 10, value: '', status: "inactive", row: 1}),
@@ -55,6 +57,7 @@ export default function Page() {
     setRow(1);
     setSquare({id: 10, value: '', status: "inactive", row: 1});
     setGuess([]);
+    setGuessedWords([])
     setGuessedLetters([]);
     setCloseLetters([]);
     setCorrectLetters([])
@@ -94,24 +97,22 @@ export default function Page() {
   
   //Event Handlers
   const updateGuess = (letter) => {
-    if(!disableKeyboard) {
-      if (currentGuess.length < 5) {
-        setGuess(previousState => [...previousState, letter]);
-        setBoard(previousState => {
-          return previousState.map(square => {
-            if (square.id === currentSquare.id) {
-              square.status = "active";
-              square.value = letter;
-              return square;
-            };
+    if(!disableKeyboard && currentGuess.length < 5) {
+      setGuess(previousState => [...previousState, letter]);
+      setBoard(previousState => {
+        return previousState.map(square => {
+          if (square.id === currentSquare.id) {
+            square.status = "active";
+            square.value = letter;
             return square;
-          });
+          };
+          return square;
         });
-  
-        if (currentSquare.id % 10 !== 4) {
-          setSquare(previousState => boardState.find(square => square.id === previousState.id + 1));
-        } 
-      };
+      });
+
+      if (currentSquare.id % 10 !== 4) {
+        setSquare(previousState => boardState.find(square => square.id === previousState.id + 1));
+      } 
     };
   };
 
@@ -169,7 +170,6 @@ export default function Page() {
         setToastMessage("You already guessed that");
 
       } else {
-        console.log(guessedWords)
         setGuessedLetters(previousState => [...previousState, ...currentGuess]);
         setGuessedWords(previousState => [...previousState, currentGuess.join("")])
         setGuess([]);
@@ -232,12 +232,13 @@ export default function Page() {
       return <Row
                   squareData={boardState.filter(square => square.row === number)}
                   accountForDoubles={accountForDoubles}
+                  key={number}
               />;
     });
   
 
   return (
-    <SafeAreaView>
+    <SafeAreaView style={styles.mainWrapper}>
       <View style={styles.app}>
         <Toast 
           message={toastMessage}
@@ -272,11 +273,17 @@ export default function Page() {
 
 const styles = StyleSheet.create({
   app: {
-    justifyContent: "space-between",
-    height: "100%"
+    justifyContent: windowWidth < 500 ? "space-between" : "space-between",
+    alignItems:"center",
+    height: "100%",
+    width: "100%"
   },
   container: {
     alignItems: "center",
     padding: 0,
+  },
+  mainWrapper: {
+    width: '100%',
+    height: windowWidth < 500 ? "100%" : '90%',
   }
 });

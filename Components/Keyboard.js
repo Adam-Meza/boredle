@@ -1,5 +1,6 @@
 import React from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, SafeAreaView } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet, Dimensions } from 'react-native';
+const windowWidth = Dimensions.get('window').width;
 
 const Keyboard = ({disableKeyboard, updateGuess, submitGuess, backspace, guessedLetters, closeLetters, correctLetters }) => {
   const handleLetterKeyPress = (letter) => {
@@ -12,7 +13,7 @@ const Keyboard = ({disableKeyboard, updateGuess, submitGuess, backspace, guessed
     if (correctLetters.includes(letter)) {
       return [StyleSheet.flatten([styles.button, styles.correctLetterButton]),
               StyleSheet.flatten([styles.buttonText, styles.guessedText]) ];
-              
+
     } else if (closeLetters.includes(letter)) {
       return [StyleSheet.flatten([styles.button, styles.closeLetterButton]),
               StyleSheet.flatten([styles.buttonText, styles.guessedText]) ];
@@ -103,13 +104,13 @@ const styles = StyleSheet.create({
   button: {
     marginHorizontal: 3,
     padding: 10,
-    paddingTop: 13,
-    paddingBottom: 13,
+    paddingTop: 15,
+    paddingBottom: 15,
     backgroundColor: 'lightgray',
     borderRadius: 5,
   },
   buttonText: {
-    fontSize: 16,
+    fontSize: 15,
     color: "black",
     fontWeight: "500"
   },
@@ -118,7 +119,7 @@ const styles = StyleSheet.create({
   },
   specialButton: {
     padding: 5.5,
-    height: 45.5,
+    height: 48,
     alignItems: "center",
     justifyContent: "center"
   }, 
@@ -130,8 +131,8 @@ const styles = StyleSheet.create({
     backgroundColor: "#f2c41d"
   },
   correctLetterButton: {
-    backgroundColor: "#537308",
-    borderColor:"#537308"
+    backgroundColor: "#4b7774",
+    borderColor:"#4b7774"
   }
 });
 
