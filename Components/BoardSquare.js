@@ -81,7 +81,8 @@ const styles = StyleSheet.create({
     borderColor: "lightgray",
   },
   incorrectBox: {
-    backgroundColor: "lightgray"
+    backgroundColor: "#b3dce3",
+    borderColor:"#b3dce3",
   },
   inactiveText: {
     color: "white"
