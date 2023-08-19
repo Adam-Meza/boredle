@@ -9,6 +9,7 @@ import ModalComponent from "./Components/ModalComponent";
 import Toast from "./Components/Toast";
 
 const windowWidth = Dimensions.get('window').width;
+const windowHeight = Dimensions.get('window').height;
 
 export default function Page() {
   const
@@ -240,25 +241,27 @@ export default function Page() {
   return (
     <SafeAreaView style={styles.mainWrapper}>
       <View style={styles.app}>
+        <Header startNewGame={startNewGame}/>
         <Toast 
           message={toastMessage}
           visibility={toastVisibility}
           setToastVisibility={setToastVisibility}
         />
-        <Header startNewGame={startNewGame}/>
-        <View style={styles.container}>
-          {boardRows}
+        <View style={styles.boardContainer}>
+          <View style={styles.container}>
+            {boardRows}
+          </View>
+          <Keyboard
+            currentWord={currentWord}
+            guessedLetters={guessedLetters}
+            updateGuess={updateGuess}
+            submitGuess={submitGuess}
+            backspace={backspace}
+            disableKeyboard={disableKeyboard}
+            correctLetters={correctLetters}
+            closeLetters={closeLetters}
+          />
         </View>
-        <Keyboard
-          currentWord={currentWord}
-          guessedLetters={guessedLetters}
-          updateGuess={updateGuess}
-          submitGuess={submitGuess}
-          backspace={backspace}
-          disableKeyboard={disableKeyboard}
-          correctLetters={correctLetters}
-          closeLetters={closeLetters}
-        />
         <ModalComponent
           setKeyboardDisable={setKeyboardDisable}
           startNewGame={startNewGame}
@@ -285,5 +288,9 @@ const styles = StyleSheet.create({
   mainWrapper: {
     width: '100%',
     height: windowWidth < 500 ? "100%" : '90%',
+  },
+  boardContainer: {
+    height: "100%",
+    justifyContent:"space-evenly"
   }
 });

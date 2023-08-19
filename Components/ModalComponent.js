@@ -9,7 +9,10 @@ const ModalComponent = ({setKeyboardDisable, visibility, message, closeModal, st
   };
   
   return (
-    <Modal visible ={visibility} animationType='slide'>
+    <Modal visible ={visibility}
+            animationType='slide'
+            style={styles.modalWrapper}
+      >
       <View style={styles.contentContainer}>
         <View style={styles.textContainer}>
           <Text style ={styles.text}>{message[0]}</Text>
@@ -29,14 +32,25 @@ const ModalComponent = ({setKeyboardDisable, visibility, message, closeModal, st
 export default ModalComponent;
 
 const styles = StyleSheet.create({ 
-  contentContainer: {
-    marginTop: "20%",
-    height: "80%",
-    width: "80%",
-    alignItems: "center",
-    justifyContent: "space-evenly",
+  modalWrapper: {
+    flex: 1,
     alignSelf: "center",
+    backgroundColor: 'blue',
+    justifyContent: 'center',
+    alignItems: 'center',
+    border: "1px lightgrey solid",
+
+  },
+  contentContainer: {
+    marginTop: "10%",
+    height: 500,
+    width: 300,
+    alignItems: 'center',
+    alignSelf: "center",
+    justifyContent: 'space-evenly',
     padding: 60,
+    backgroundColor: 'white',
+    border: "1px lightgrey solid"
   },
   textContainer:{
     alignItems: 'center',
@@ -46,14 +60,15 @@ const styles = StyleSheet.create({
     color:'white',
     backgroundColor: "#4b7774",
     padding: 15,
+    outline: 'none',
+    borderWidth: 0,
   },
   text: {
     fontSize: 18,
-    margin: 0,
+    marginVertical: 5,
     width: "100%"
   },
   emoji: {
-    marginTop: 50,
     fontSize: 48,
   }
 });

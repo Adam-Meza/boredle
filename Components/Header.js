@@ -8,7 +8,7 @@ const Header = ({startNewGame}) => {
   
   return (
     <View style={styles.header}>
-      <Text style={styles.headerText}>Boredle</Text>
+      <Text style={styles.headerText}>Birdle</Text>
       <TouchableOpacity onPress={() => handlePress()}>
         <Text style={styles.button}>
           New Game
